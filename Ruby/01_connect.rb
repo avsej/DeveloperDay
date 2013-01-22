@@ -18,22 +18,22 @@ cb = Couchbase.connect("http://localhost:8091/")
 
 # this will fail unless you set a SASL password
 begin
-  cb = Couchbase.connect({
+  cb = Couchbase.connect(
     :hostname => "127.0.0.1",
     :port => 8091,
     :bucket => "default",
-    :password => "password"  
-  })
-rescue
-  
+    :password => "password"
+  )
+rescue Couchbase::Error::Base => ex
+  puts "Connection failed: #{ex.class.to_s.bright}"
 end
 
 # Recommended with clusters, assign a list of nodes to attempt connection with instead of a single node in case of node failure
-cb = Couchbase.connect({
+cb = Couchbase.connect(
   :bucket => "default",
   :nodelist => ["localhost:8091", "localhost"], # since we have a single node, just using the same for both
-  :quiet => true  # return nils instead of Exceptions for Couchbase::Error::KeyNotFound  
-})
+  :quiet => true  # return nils instead of Exceptions for Couchbase::Error::KeyNotFound
+)
 
 cb = Couchbase.bucket
 puts "First Connection".bright

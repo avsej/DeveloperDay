@@ -1,4 +1,16 @@
 source :rubygems
 
+gem "yajl-ruby"
 gem "couchbase"
 gem "rainbow"
+
+platforms :ruby_18 do
+  gem "ParseTree", :require => ['parse_tree', 'parse_tree_extensions']
+  gem "sourcify"
+end
+
+platforms :ruby_19 do
+  gem "sourcify"
+  gem "ripper_ruby_parser"
+  gem "file-tail"
+end

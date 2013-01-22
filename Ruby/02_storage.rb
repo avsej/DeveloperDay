@@ -1,27 +1,24 @@
 #!/usr/bin/env ruby
 
-require "rubygems"
-require "couchbase"
-require "rainbow"
-require "pp"
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'common'
 
-system 'clear'
+# system 'clear'
 puts "--------------------------------------------------------------------------".bright.foreground(:red)
 puts "Couchbase Storage Operations".bright.foreground(:red)
 puts "--------------------------------------------------------------------------".bright.foreground(:red)
 puts
 
 # establish connection
-cb = Couchbase.connect
+def cb
+  @cb ||= Couchbase.connect
+end
 
-
-puts "Set a Key-Value and Get the Key-Value".bright
-puts
-# create a key
-cb.set("mytest", "my value")
-puts "cb.get(\"mytest\")" + " => ".bright + "\"" + cb.get("mytest") + "\""
-puts
-
+run("Set a Key-Value and Get the Key-Value")do
+  cb.set("mytest", "my value")
+  cb.get("mytest")
+end
+__END__
 
 
 
@@ -50,7 +47,7 @@ puts "Try to replace non-existent key, raises exception".bright
 puts
 # this raises exception (doesn’t exist)
 begin
-  cb.replace("mytest4", "my value4 replaced") 
+  cb.replace("mytest4", "my value4 replaced")
 rescue Couchbase::Error::NotFound
   puts "Couchbase::Error::NotFound exception raised"
 end
@@ -60,7 +57,7 @@ puts
 puts "Add another Key-Value pair".bright
 puts
 # success
-cb.add("mytest3", "my value3") 
+cb.add("mytest3", "my value3")
 puts "cb.get(\"mytest3\")" + " => ".bright + "\"" + cb.get("mytest3") + "\""
 puts
 
@@ -80,7 +77,7 @@ puts
 puts cb.get("mytest", :quiet => true ).class.to_s
 
 # set the connection to always use quiet
-cb.quiet = true 
+cb.quiet = true
 puts "cb.get(\"mytest\") = " + " => ".bright + cb.get("mytest").class.to_s
 puts
 
@@ -116,7 +113,7 @@ puts
 puts "Hit CTRL-C to end this loop of resetting TTL".bright.foreground(:blue)
 puts
 
-loop do 
+loop do
   puts "cb.get(\"mytest\", :ttl => 3)" + " => ".bright + "\"" + cb.get("mytest", :ttl => 3) + "\""
   puts
   puts "Sleeping for 2 seconds...".bright
